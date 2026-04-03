@@ -1,8 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ARTICLES } from "./articles";
 
 export default function KnowledgeReader() {
   const [selected, setSelected] = useState<number | null>(null);
+
+  const openArticle = useCallback((id: number) => {
+    setSelected(id);
+    history.pushState({ articleId: id }, "");
+  }, []);
+
+  const closeArticle = useCallback(() => {
+    setSelected(null);
+  }, []);
+
+  useEffect(() => {
+    const onPopState = (e: PopStateEvent) => {
+      if (e.state?.articleId) {
+        setSelected(e.state.articleId);
+      } else {
+        setSelected(null);
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   const article = selected !== null ? ARTICLES.find((a) => a.id === selected) : null;
 
@@ -31,7 +52,7 @@ export default function KnowledgeReader() {
               <div
                 key={a.id}
                 style={S.listItem}
-                onClick={() => setSelected(a.id)}
+                onClick={() => openArticle(a.id)}
               >
                 <div style={S.listMeta}>
                   <span style={S.listSource}>{a.meta.source}</span>
@@ -56,7 +77,10 @@ export default function KnowledgeReader() {
         <article style={S.article}>
           <div
             style={S.back}
-            onClick={() => setSelected(null)}
+            onClick={() => {
+              closeArticle();
+              history.back();
+            }}
           >
             ← 返回
           </div>

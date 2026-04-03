@@ -18,7 +18,7 @@
 
 ## 数据结构
 
-所有文章存储在 `src/articles.ts` 的 `ARTICLES` 数组中（UI 组件在 `src/App.tsx`，两者已解耦）。添加文章只需往数组末尾追加一个对象：
+每篇文章独立存储在 `src/articles/` 目录下（如 `01.ts`、`02.ts`），由 `src/articles/index.ts` 汇总导出 `ARTICLES` 数组（UI 组件在 `src/App.tsx`，两者已解耦）。每个文章文件导出一个符合 `Article` 类型的对象：
 
 ```ts
 {
@@ -43,10 +43,11 @@
 
 ## 添加文章的步骤
 
-1. 在 `ARTICLES` 数组末尾追加新对象，`id` 取当前最大值 +1
-2. 如果有配图，将图片复制到 `public/images/` 目录，在对应 section 中添加 `image: "/images/文件名"`
-3. 运行 `npm run build` 验证无报错
-4. 首页的篇数和问题数会自动计算，无需手动更新
+1. 在 `src/articles/` 目录新建文件（如 `20.ts`），`id` 取当前最大值 +1
+2. 在 `src/articles/index.ts` 中添加 import 并将其加入 `ARTICLES` 数组
+3. 如果有配图，将图片复制到 `public/images/` 目录，在对应 section 中添加 `image: "/images/文件名"`
+4. 运行 `npm run build` 验证无报错
+5. 首页的篇数和问题数会自动计算，无需手动更新
 
 ---
 
